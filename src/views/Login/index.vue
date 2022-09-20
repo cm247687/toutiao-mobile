@@ -1,6 +1,8 @@
 <template>
   <div class="login-container">
-    <van-nav-bar class="page-nav-bar" title="登录" />
+    <van-nav-bar class="page-nav-bar" title="登录">
+      <van-icon name="cross" slot="left" @click="$router.back('/')" />
+    </van-nav-bar>
     <van-form ref="loginForm" @submit="onSubmit">
       <van-field
         v-model="user.mobile"
@@ -10,7 +12,7 @@
         type="number"
         maxlength="11"
       >
-      <i slot="left-icon" class="toutiao toutiao-shouji"></i>
+        <i slot="left-icon" class="toutiao toutiao-shouji"></i>
       </van-field>
       <van-field
         v-model="user.code"
@@ -20,38 +22,37 @@
         type="number"
         maxlength="6"
       >
-      <i slot="left-icon" class="toutiao toutiao-yanzhengma"></i>
-      <template #button>
-        <van-count-down
-        :time="1000*60"
-        format="ss s"
-        v-if="isCountDownShow"
-        @finish="isCountDownShow = false"
-         />
-        <van-button
-        class="send-sms-btn"
-        round
-        size="small"
-        type="default"
-        native-type="button"
-        @click="onSendSms"
-        v-else
-        >获取验证码</van-button>
-      </template>
+        <i slot="left-icon" class="toutiao toutiao-yanzhengma"></i>
+        <template #button>
+          <van-count-down
+            :time="1000 * 60"
+            format="ss s"
+            v-if="isCountDownShow"
+            @finish="isCountDownShow = false"
+          />
+          <van-button
+            class="send-sms-btn"
+            round
+            size="small"
+            type="default"
+            native-type="button"
+            @click="onSendSms"
+            v-else
+            >获取验证码</van-button
+          >
+        </template>
       </van-field>
       <div class="login-btn-wrap">
-        <van-button
-        class="login-btn"
-        block
-        type="info"
-        native-type="submit">登录</van-button>
+        <van-button class="login-btn" block type="info" native-type="submit"
+          >登录</van-button
+        >
       </div>
     </van-form>
   </div>
 </template>
 
 <script>
-import { login, sendSms } from '@/api/user/login.js'
+import { login, sendSms } from '@/api/user.js'
 export default {
   data () {
     return {
@@ -97,6 +98,7 @@ export default {
         const { data } = await login(user)
         this.$store.commit('setUser', data.data)
         this.$toast.success('登录成功')
+        this.$router.back()
       } catch (err) {
         if (err.response.status === 400) {
           this.$toast.fail('手机号或者验证码错误')
@@ -128,21 +130,21 @@ export default {
 </script>
 
 <style scoped lang="less">
-.login-container{
-  .toutiao{
+.login-container {
+  .toutiao {
     font-size: 37px;
   }
-  .send-sms-btn{
+  .send-sms-btn {
     background-color: #ededed;
     // width: 152px;
     height: 46px;
     line-height: 46px;
     font-size: 22px;
-    color:#666666
+    color: #666666;
   }
-  .login-btn-wrap{
+  .login-btn-wrap {
     padding: 53px 33px;
-    .login-btn{
+    .login-btn {
       background-color: #6db4fb;
       border: none;
     }
